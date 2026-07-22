@@ -1,8 +1,52 @@
-# Detection of Diabetic Retinopathy
+# Explainable Deep Learning for Diabetic Retinopathy Detection
 
-Минимальный каркас проекта для дипломной работы по распознаванию диабетической ретинопатии и дальнейшего добавления explainable AI через `Grad-CAM`.
+This repository contains a deep learning pipeline for detecting and grading diabetic retinopathy from retinal fundus images. The project compares transfer-learning architectures with a custom convolutional neural network, evaluates retinal-image preprocessing methods, and applies Grad-CAM to explain model predictions.
 
-## Структура проекта
+The implementation supports both:
+
+- **binary classification** for diabetic retinopathy screening;
+- **multi-class classification** using the original five severity classes.
+
+## Project Objectives
+
+The main objectives of the project are to:
+
+- train and compare `ResNet18`, `DenseNet121`, and `EfficientNet-B0`;
+- compare transfer learning with a custom CNN trained from scratch;
+- evaluate the effect of retinal-image preprocessing;
+- address class imbalance in multi-class classification;
+- analyze model performance using classification and error-analysis metrics;
+- visualize image regions that influence predictions using `Grad-CAM`;
+- investigate whether the models rely on clinically relevant retinal regions or shortcut features such as borders, shadows, and the optic disc.
+
+## Dataset
+
+The project is configured to work with the **APTOS 2019 diabetic retinopathy dataset**.
+
+The data loader supports the standard APTOS columns:
+
+- `id_code` — image identifier;
+- `diagnosis` — diabetic retinopathy class.
+
+It also supports predefined training, validation, and test CSV files.
+
+For custom datasets, the project can read either of the following CSV formats:
+
+```text
+image_id,label
+img_001,0
+img_002,1
+```
+
+or:
+
+```text
+image_path,label
+class0/img_001.png,0
+class1/img_002.png,1
+```
+
+## Project Structure
 
 ```text
 Detection of Diabetic Retinopathy/
@@ -17,21 +61,21 @@ Detection of Diabetic Retinopathy/
 │   ├── resnet18_preprocessed.yaml
 │   └── custom_cnn_scratch.yaml
 ├── data/
-│   ├── raw/              # исходный датасет
-│   └── processed/        # подготовленные данные и сплиты
-├── models/               # сохранённые веса
-├── notebooks/            # EDA и эксперименты
-│   ├── comparison/       # notebooks для сравнительного анализа моделей
-│   ├── custom_cnn/       # notebooks для моделей, обученных с нуля
-│   ├── multiclass/       # notebooks для multi-class экспериментов
-│   └── transfer_learning/ # notebooks для сравнения pretrained baseline-моделей
+│   ├── raw/
+│   └── processed/
+├── models/
+├── notebooks/
+│   ├── comparison/
+│   ├── custom_cnn/
+│   ├── multiclass/
+│   └── transfer_learning/
 ├── outputs/
-│   ├── comparison/       # сравнение baseline и улучшенных экспериментов
-│   ├── comparison_all/   # общее сравнение scratch и transfer learning моделей
-│   ├── custom_cnn/       # результаты custom CNN from scratch
-│   │   └── gradcam/      # Grad-CAM для custom CNN
-│   ├── figures/          # графики, confusion matrix
-│   └── gradcam/          # Grad-CAM тепловые карты
+│   ├── comparison/
+│   ├── comparison_all/
+│   ├── custom_cnn/
+│   │   └── gradcam/
+│   ├── figures/
+│   └── gradcam/
 ├── scripts/
 │   ├── download_aptos.py
 │   ├── check_dataset.py
@@ -48,31 +92,51 @@ Detection of Diabetic Retinopathy/
 └── requirements.txt
 ```
 
-## Рекомендуемая версия Python
+## Installation
 
-Для deep learning библиотек лучше использовать `Python 3.11`. На вашей машине сейчас доступен `Python 3.13.3`, но часть библиотек вроде `torch` и `opencv-python` иногда устанавливается стабильнее именно на `3.11`.
+`Python 3.11` is recommended for compatibility with deep learning libraries such as PyTorch and OpenCV.
 
-## Как положить датасет
+Create and activate a virtual environment:
 
-### Вариант 1: скачать APTOS 2019 через KaggleHub
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+```
 
-После установки зависимостей:
+Install the required dependencies:
+
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+## Dataset Preparation
+
+### Automatic Download
+
+After installing the dependencies, download the APTOS 2019 dataset with:
 
 ```bash
 python3 scripts/download_aptos.py
 ```
 
-Если нужна авторизация через интерактивный логин:
+For interactive Kaggle authentication, use:
 
 ```bash
 python3 scripts/download_aptos.py --login
 ```
 
-Скрипт попытается скачать датасет `mariaherrerot/aptos2019` в папку `data/raw/aptos2019` и затем подскажет, где он нашёл CSV-файлы и папки с изображениями.
+The script downloads the `mariaherrerot/aptos2019` dataset to:
 
-### Вариант 1: APTOS 2019 в текущем проекте
+```text
+data/raw/aptos2019/
+```
 
-Положите файлы так:
+It also reports the detected locations of the CSV files and image directories.
+
+### Manual Dataset Placement
+
+The expected APTOS directory structure is:
 
 ```text
 data/raw/aptos2019/
@@ -90,40 +154,11 @@ data/raw/aptos2019/
     └── test_images/
 ```
 
-Этот проект умеет автоматически читать колонки `id_code` и `diagnosis`, которые используются в `APTOS 2019`, и работает с уже готовыми `train/valid/test` split-файлами.
+Update the dataset paths in the relevant YAML configuration file when the local directory structure is different.
 
-### Вариант 2: другой датасет
+## Dataset Validation
 
-Если у вас другой датасет, самый простой формат CSV такой:
-
-```text
-image_id,label
-img_001,0
-img_002,1
-```
-
-или
-
-```text
-image_path,label
-class0/img_001.png,0
-class1/img_002.png,1
-```
-
-## Установка
-
-```bash
-python3.11 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-Если у вас пока нет `python3.11`, можно сначала просто сохранить структуру проекта, а окружение настроить позже.
-
-## Быстрая проверка датасета
-
-После того как вы загрузите изображения и CSV:
+Before training, verify that the CSV file and image directory are correctly configured:
 
 ```bash
 python3 scripts/check_dataset.py \
@@ -132,246 +167,216 @@ python3 scripts/check_dataset.py \
   --binary
 ```
 
-Скрипт проверит:
+The validation script checks:
 
-- сколько строк в CSV;
-- сколько классов получилось;
-- есть ли отсутствующие изображения;
-- удаётся ли прочитать первый sample.
+- the number of records in the CSV file;
+- the detected number of classes;
+- missing image files;
+- whether an image sample can be loaded successfully.
 
-## Базовый запуск обучения
+## Running Experiments
 
-Отредактируйте путь в `configs/default.yaml`, затем:
+All experiments are controlled through YAML configuration files.
+
+The general training command is:
+
+```bash
+python3 scripts/train_baseline.py --config <config-path>
+```
+
+### Available Configurations
+
+| Configuration | Experiment |
+|---|---|
+| `configs/default.yaml` | ResNet18 baseline |
+| `configs/densenet121_baseline.yaml` | DenseNet121 transfer-learning baseline |
+| `configs/efficientnet_b0_baseline.yaml` | EfficientNet-B0 transfer-learning baseline |
+| `configs/resnet18_preprocessed.yaml` | ResNet18 with retinal-image preprocessing |
+| `configs/custom_cnn_scratch.yaml` | Custom CNN trained from scratch |
+| `configs/efficientnet_b0_multiclass.yaml` | EfficientNet-B0 five-class baseline |
+| `configs/efficientnet_b0_multiclass_crop.yaml` | Five-class EfficientNet-B0 with retinal-focused cropping |
+| `configs/efficientnet_b0_multiclass_crop_clahe.yaml` | Five-class EfficientNet-B0 with cropping and CLAHE |
+
+### Baseline Models
+
+Run the ResNet18 baseline:
 
 ```bash
 python3 scripts/train_baseline.py --config configs/default.yaml
 ```
 
-## Следующий baseline-этап для диплома
-
-Чтобы baseline выглядел как полноценный research block, лучше сравнить не одну pretrained модель, а несколько стандартных архитектур при одинаковых условиях.
-Для этого я подготовил еще два конфига:
+Run the additional transfer-learning models:
 
 ```bash
 python3 scripts/train_baseline.py --config configs/densenet121_baseline.yaml
 python3 scripts/train_baseline.py --config configs/efficientnet_b0_baseline.yaml
 ```
 
-Идея этого этапа:
+These experiments compare three established convolutional architectures under a consistent experimental pipeline:
 
-- `ResNet18` - компактный и понятный baseline;
-- `DenseNet121` - популярная медицинская архитектура с сильным feature reuse;
-- `EfficientNet-B0` - более современный и эффективный baseline.
+- `ResNet18` — a compact baseline architecture;
+- `DenseNet121` — a densely connected model with extensive feature reuse;
+- `EfficientNet-B0` — an efficient architecture that balances model depth, width, and input resolution.
 
-Такой блок сравнения уже выглядит намного ближе к формату дипломной экспериментальной главы.
+### Preprocessing Experiment
 
-## Первый multi-class эксперимент
+Run the preprocessing-enhanced ResNet18 experiment:
 
-Для перехода от binary screening к исходной задаче градации тяжести DR я добавил отдельный конфиг:
+```bash
+python3 scripts/train_baseline.py --config configs/resnet18_preprocessed.yaml
+```
+
+The preprocessing pipeline includes:
+
+- removal of dark image borders;
+- retinal-field cropping;
+- conversion to a square image region;
+- CLAHE-based contrast enhancement.
+
+This experiment is designed to compare the original baseline with a preprocessing-enhanced version while keeping the baseline configuration unchanged.
+
+### Custom CNN From Scratch
+
+Run the custom CNN experiment:
+
+```bash
+python3 scripts/train_baseline.py --config configs/custom_cnn_scratch.yaml
+```
+
+This configuration uses:
+
+```text
+model_name: custom_cnn
+pretrained: false
+```
+
+Its model weights and generated outputs are stored separately:
+
+```text
+models/custom_cnn_scratch/
+outputs/custom_cnn/
+```
+
+### Multi-Class Classification
+
+Run the five-class EfficientNet-B0 baseline:
 
 ```bash
 python3 scripts/train_baseline.py --config configs/efficientnet_b0_multiclass.yaml
 ```
 
-Что важно в этом этапе:
+The multi-class configuration:
 
-- используется тот же текущий `APTOS 2019` dataset, заново скачивать исходные данные не нужно;
-- `binary_classification: false`, поэтому сохраняются исходные классы `0, 1, 2, 3, 4`;
-- в loss добавлены `balanced class weights`, чтобы учесть дисбаланс классов;
-- основная validation-метрика для выбора лучшей эпохи: `f1_macro`.
+- preserves the original labels `0`, `1`, `2`, `3`, and `4`;
+- sets `binary_classification: false`;
+- uses balanced class weights to reduce the effect of class imbalance;
+- uses macro F1-score as the main validation metric for best-epoch selection.
 
-Такой multi-class запуск уже ближе к реальной clinical grading задаче, чем бинарный screening baseline.
-
-## Пошаговые preprocessing-эксперименты для multi-class
-
-Чтобы multi-class ветка выглядела как аккуратное исследование, а не как набор случайных настроек, я подготовил два следующих конфига:
+Run the preprocessing variants:
 
 ```bash
 python3 scripts/train_baseline.py --config configs/efficientnet_b0_multiclass_crop.yaml
 python3 scripts/train_baseline.py --config configs/efficientnet_b0_multiclass_crop_clahe.yaml
 ```
 
-Логика этой последовательности:
+The comparison follows a controlled sequence:
 
-- `efficientnet_b0_multiclass.yaml` - baseline без preprocessing;
-- `efficientnet_b0_multiclass_crop.yaml` - только retinal-focused crop;
-- `efficientnet_b0_multiclass_crop_clahe.yaml` - crop + CLAHE.
+1. EfficientNet-B0 without additional preprocessing;
+2. EfficientNet-B0 with retinal-focused cropping;
+3. EfficientNet-B0 with retinal-focused cropping and CLAHE.
 
-Так мы сможем честно проверить:
+This design makes it possible to evaluate whether preprocessing improves overall classification and the recognition of rare severe classes.
 
-- дает ли пользy одно только центрирование retinal field;
-- улучшает ли `CLAHE` различение близких стадий DR;
-- какой preprocessing реально помогает редким severe-классам.
+## Model Evaluation
 
-Для анализа результатов первого multi-class эксперимента я добавил notebook:
+Depending on the experiment, the analysis pipeline produces:
 
-```text
-notebooks/multiclass/11_efficientnet_b0_multiclass_results.ipynb
-```
+- accuracy;
+- precision;
+- recall;
+- F1-score;
+- macro F1-score;
+- per-class precision, recall, F1-score, and support;
+- confusion matrices;
+- row-normalized confusion matrices;
+- ROC curves;
+- true-positive, true-negative, false-positive, and false-negative counts;
+- comparisons of false positives and false negatives;
+- rare-class recall analysis;
+- prediction-change summaries.
 
-Он сохраняет:
+For diabetic retinopathy screening, particular attention is given to **recall** and **false negatives**, because missed positive cases are important when interpreting screening performance.
 
-- `Table 11.1` - основные multi-class метрики;
-- `Table 11.2` - per-class precision, recall, F1-score, support;
-- `Table 11.3` - confusion-matrix counts `5 x 5`;
-- `Figure 11.1` - confusion matrix;
-- `Figure 11.2` - row-normalized confusion matrix;
-- `Figure 11.3` - per-class metric comparison.
+## Explainability With Grad-CAM
 
-Для сравнения multi-class baseline и preprocessing-вариантов я добавил еще один notebook:
+Grad-CAM is used to visualize the image regions that contribute to model predictions.
 
-```text
-notebooks/multiclass/12_multiclass_preprocessing_comparison.ipynb
-```
+The explainability analysis includes examples from four prediction categories:
 
-Он сохраняет:
+- true positives;
+- true negatives;
+- false positives;
+- false negatives.
 
-- `Table 12.1` - comparison of overall multi-class metrics;
-- `Table 12.2` - per-class F1-score comparison;
-- `Table 12.3` - rare-class recall comparison for severe stages;
-- `Figure 12.1` - overall metric comparison;
-- `Figure 12.2` - per-class F1-score comparison;
-- `Figure 12.3` - rare-class recall comparison.
+This analysis is used to examine whether model attention is concentrated on retinal structures or on potentially misleading image characteristics such as borders, shadows, and the optic disc region.
 
-## Следующий эксперимент после Grad-CAM
-
-После explainability-анализа у нас появилась гипотеза, что модель частично использует края изображения, тени и область диска как shortcut-сигналы.
-Для следующего более сильного эксперимента я добавил отдельный конфиг с предобработкой сетчатки:
-
-- обрезка темных границ;
-- приведение к квадратной области;
-- CLAHE-контрастирование.
-
-Запуск:
-
-```bash
-python3 scripts/train_baseline.py --config configs/resnet18_preprocessed.yaml
-```
-
-Так baseline в `configs/default.yaml` остается нетронутым, и мы можем сделать честное сравнение `baseline vs preprocessing-enhanced`.
-
-## Эксперимент с собственной CNN from scratch
-
-Для сравнения transfer learning с обучением с нуля я добавил отдельный конфиг:
-
-```bash
-python3 scripts/train_baseline.py --config configs/custom_cnn_scratch.yaml
-```
-
-Особенности этого эксперимента:
-
-- `model_name: custom_cnn`
-- `pretrained: false`
-- отдельная папка для весов: `models/custom_cnn_scratch`
-- отдельная папка для результатов: `outputs/custom_cnn`
-
-## Ноутбук сравнения моделей
-
-Для сравнения исходного baseline и preprocessing-enhanced версии я добавил ноутбук:
-
-```text
-notebooks/04_model_comparison.ipynb
-```
-
-Он сохраняет:
-
-- `Table 4.1` - сравнение основных метрик;
-- `Table 4.2` - сравнение `TP/TN/FP/FN`;
-- `Table 4.3` - summary изменений предсказаний;
-- `Figure 4.1` - сравнение метрик;
-- `Figure 4.2` - trade-off между `FP` и `FN`;
-- `Figure 4.3` - сравнение ROC-кривых.
-
-## Ноутбук общего сравнения всех моделей
-
-Для общего сравнения `custom_cnn`, `baseline ResNet18`, `preprocessed ResNet18`, `DenseNet121` и `EfficientNet-B0` я добавил отдельный notebook:
-
-```text
-notebooks/comparison/06_all_model_comparison.ipynb
-```
-
-Он сохраняет:
-
-- `Table 6.1` - сравнение основных метрик всех baseline-моделей;
-- `Table 6.2` - сравнение `TP/TN/FP/FN` всех baseline-моделей;
-- `Table 6.3` - clinical summary с акцентом на `recall` и `false negatives`;
-- `Figure 6.1` - сравнение test metrics;
-- `Figure 6.2` - comparison of false positives and false negatives;
-- `Figure 6.3` - comparison of ROC curves.
-
-## Ноутбуки для transfer learning baseline-моделей
-
-Для отдельных result-analysis notebooks по pretrained моделям я добавил:
-
-```text
-notebooks/transfer_learning/08_densenet121_results.ipynb
-notebooks/transfer_learning/09_efficientnet_b0_results.ipynb
-```
-
-Оба ноутбука сохраняют:
-
-- итоговую таблицу метрик на test split;
-- таблицу с `TP/TN/FP/FN`;
-- `confusion matrix`;
-- `ROC curve`.
-
-Для explainability-анализа сильнейшей transfer learning модели я также добавил:
-
-```text
-notebooks/transfer_learning/10_efficientnet_b0_gradcam.ipynb
-```
-
-Он сохраняет:
-
-- `Table 10.1` - summary по `TP/TN/FP/FN` outcome categories;
-- `Figure 10.1` - распределение outcome categories;
-- `Image 10.1` - true positive Grad-CAM examples;
-- `Image 10.2` - true negative Grad-CAM examples;
-- `Image 10.3` - false positive Grad-CAM examples;
-- `Image 10.4` - false negative Grad-CAM examples.
-
-Результаты сохраняются в:
+Grad-CAM outputs for EfficientNet-B0 are stored in:
 
 ```text
 outputs/efficientnet_b0_baseline/gradcam/
 ```
 
-## Ноутбук для custom CNN
-
-Для модели, обученной с нуля, я сохранил отдельный notebook в собственной папке:
+Grad-CAM outputs for the custom CNN are stored in:
 
 ```text
-notebooks/custom_cnn/05_custom_cnn_results.ipynb
+outputs/custom_cnn/gradcam/
 ```
 
-Это помогает не смешивать:
+## Analysis Notebooks
 
-- `ResNet18` experiments;
-- preprocessing experiments;
-- `custom CNN from scratch`.
+| Notebook | Purpose |
+|---|---|
+| `notebooks/04_model_comparison.ipynb` | Comparison of baseline and preprocessing-enhanced ResNet18 |
+| `notebooks/custom_cnn/05_custom_cnn_results.ipynb` | Evaluation of the custom CNN trained from scratch |
+| `notebooks/comparison/06_all_model_comparison.ipynb` | Overall comparison of custom CNN, ResNet18, DenseNet121, and EfficientNet-B0 |
+| `notebooks/custom_cnn/07_custom_cnn_gradcam.ipynb` | Grad-CAM analysis for the custom CNN |
+| `notebooks/transfer_learning/08_densenet121_results.ipynb` | DenseNet121 result analysis |
+| `notebooks/transfer_learning/09_efficientnet_b0_results.ipynb` | EfficientNet-B0 result analysis |
+| `notebooks/transfer_learning/10_efficientnet_b0_gradcam.ipynb` | Grad-CAM analysis for EfficientNet-B0 |
+| `notebooks/multiclass/11_efficientnet_b0_multiclass_results.ipynb` | Five-class EfficientNet-B0 evaluation |
+| `notebooks/multiclass/12_multiclass_preprocessing_comparison.ipynb` | Comparison of multi-class preprocessing strategies |
 
-Для explainability-анализа `custom CNN` я добавил отдельный notebook:
+## Generated Tables and Figures
 
-```text
-notebooks/custom_cnn/07_custom_cnn_gradcam.ipynb
-```
+The notebooks generate experiment-specific tables and visualizations, including:
 
-Он сохраняет:
+- summary tables of test metrics;
+- `TP/TN/FP/FN` tables;
+- per-class performance tables;
+- confusion matrices;
+- normalized confusion matrices;
+- ROC curves;
+- model-comparison charts;
+- false-positive and false-negative comparisons;
+- rare-class recall comparisons;
+- Grad-CAM visualizations.
 
-- `Table 7.1` - summary по `TP/TN/FP/FN` для custom CNN;
-- `Figure 7.1` - распределение outcome categories;
-- `Image 7.1` - true positive Grad-CAM examples;
-- `Image 7.2` - true negative Grad-CAM examples;
-- `Image 7.3` - false positive Grad-CAM examples;
-- `Image 7.4` - false negative Grad-CAM examples.
+Generated files are organized under the `outputs/` directory to keep results from different experiment groups separate.
 
-## Что делать дальше
+## Recommended Workflow
 
-1. Загрузить один датасет, лучше начать с `APTOS 2019`.
-2. Если скачивали через `KaggleHub`, при необходимости сверить реальные пути к `train_1.csv`, `valid.csv`, `test.csv` и папкам с изображениями.
-3. Проверить чтение через `scripts/check_dataset.py`.
-4. Запустить baseline-модель `ResNet18`.
-5. Построить confusion matrix, ROC curve и анализ ошибок.
-6. Выполнить Grad-CAM-анализ.
-7. Запустить улучшенный `ResNet18` с предобработкой и сравнить результаты.
-# Explainable-Deep-Learning-for-Detection-of-Diabetic-Retinopathy-from-Retinal-Fundus-Images.
+1. Install the project dependencies.
+2. Download or manually add the APTOS 2019 dataset.
+3. Validate the dataset paths and image loading.
+4. Run the ResNet18 baseline.
+5. Train DenseNet121 and EfficientNet-B0 under the same setup.
+6. Compare the baseline models using the analysis notebooks.
+7. Run the preprocessing-enhanced ResNet18 experiment.
+8. Train and evaluate the custom CNN.
+9. Perform Grad-CAM analysis on selected models.
+10. Run the five-class EfficientNet-B0 experiments.
+11. Compare cropping and CLAHE preprocessing strategies.
+
+## Repository Scope
+
+This repository is intended for academic experimentation with diabetic retinopathy classification and explainable deep learning. The current pipeline focuses on model comparison, preprocessing analysis, error analysis, and Grad-CAM-based interpretation of retinal fundus image classifiers.
