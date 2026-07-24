@@ -1,0 +1,6 @@
+metric,baseline_resnet18,preprocessed_resnet18,delta_preprocessed_minus_baseline
+accuracy,0.9781,0.9809,0.0027
+precision,0.9649,0.9819,0.017
+recall,0.988,0.976,-0.012
+f1_score,0.9763,0.979,0.0026
+roc_auc,0.9974,0.9971,-0.0002

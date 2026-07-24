@@ -1,0 +1,5 @@
+outcome,Custom CNN,ResNet18,ResNet18 + Preprocessing,DenseNet121,EfficientNet-B0
+True Negative,195,193,196,194,198
+False Positive,4,6,3,5,1
+False Negative,17,2,4,7,3
+True Positive,150,165,163,160,164

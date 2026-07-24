@@ -1,0 +1,5 @@
+outcome,count
+True Negative,195
+False Positive,4
+False Negative,17
+True Positive,150

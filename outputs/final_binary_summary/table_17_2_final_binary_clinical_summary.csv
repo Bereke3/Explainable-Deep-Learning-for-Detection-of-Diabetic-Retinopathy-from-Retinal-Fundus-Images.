@@ -1,0 +1,7 @@
+model,recall,precision,f1_score,false_negative,false_positive
+Baseline ResNet18,0.988,0.9649,0.9763,2,6
+EfficientNet-B0,0.982,0.9939,0.988,3,1
+ResNet18 + Preprocessing,0.976,0.9819,0.979,4,3
+DenseNet121,0.9581,0.9697,0.9639,7,5
+Custom CNN (Scratch),0.8982,0.974,0.9346,17,4
+EfficientNet-B4,0.982036,0.964706,0.973294,3,6

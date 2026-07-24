@@ -1,0 +1,6 @@
+class_id,class_name,Baseline,Crop,Crop + CLAHE
+0,No DR,0.9848,0.9824,0.9824
+1,Mild DR,0.5393,0.5067,0.5758
+2,Moderate DR,0.6125,0.6543,0.6936
+3,Severe DR,0.3636,0.36,0.3556
+4,Proliferative DR,0.4651,0.4167,0.4706

@@ -1,0 +1,5 @@
+topic,summary
+Final selected model,EfficientNet-B0 is the strongest overall binary baseline in the current project.
+Clinical tradeoff,"ResNet18 remains the most recall-oriented model, but EfficientNet-B0 offers a stronger overall balance with fewer false positives."
+Explainability insight,"Grad-CAM for EfficientNet-B0 is generally retinal-centered and more clinically plausible than the scratch model, but some artifact sensitivity remains."
+Architecture scaling insight,"EfficientNet-B4 did not outperform EfficientNet-B0 in this setup, showing that a larger backbone is not automatically better."

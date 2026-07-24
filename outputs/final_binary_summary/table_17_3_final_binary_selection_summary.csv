@@ -1,0 +1,4 @@
+criterion,selected_model,reason
+Best overall binary baseline,EfficientNet-B0,"Best accuracy, precision, F1-score, and near-best ROC-AUC with only 1 false positive."
+Best recall-oriented screening model,ResNet18,Highest recall and lowest false-negative count among the binary baselines.
+Largest EfficientNet tested,EfficientNet-B4,Did not outperform EfficientNet-B0 under the current setup despite the larger backbone.

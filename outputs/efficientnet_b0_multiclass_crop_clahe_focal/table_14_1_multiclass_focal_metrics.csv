@@ -1,0 +1,9 @@
+metric,value
+accuracy,0.786885
+precision_macro,0.631129
+recall_macro,0.643398
+f1_macro,0.611992
+f1_weighted,0.794224
+qwk,0.858583
+roc_auc_ovr_macro,0.931568
+roc_auc_ovr_weighted,0.962649

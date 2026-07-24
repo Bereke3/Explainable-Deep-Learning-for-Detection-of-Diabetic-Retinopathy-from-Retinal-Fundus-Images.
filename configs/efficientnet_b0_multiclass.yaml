@@ -1,0 +1,38 @@
+dataset:
+  name: aptos2019
+  use_predefined_splits: true
+  train_csv_path: data/raw/aptos2019/train_1.csv
+  train_images_dir: data/raw/aptos2019/train_images/train_images
+  valid_csv_path: data/raw/aptos2019/valid.csv
+  valid_images_dir: data/raw/aptos2019/val_images/val_images
+  test_csv_path: data/raw/aptos2019/test.csv
+  test_images_dir: data/raw/aptos2019/test_images/test_images
+  image_extension: .png
+  binary_classification: false
+  image_size: 224
+  preprocessing:
+    enabled: false
+    crop_dark_border: false
+    crop_threshold: 12
+    crop_padding: 8
+    center_square_crop: false
+    apply_clahe: false
+    clahe_clip_limit: 2.0
+    clahe_tile_grid_size: 8
+    apply_autocontrast: false
+    autocontrast_cutoff: 1
+
+training:
+  model_name: efficientnet_b0
+  batch_size: 16
+  num_epochs: 5
+  learning_rate: 0.0003
+  num_workers: 2
+  seed: 42
+  pretrained: true
+  class_weighting: balanced
+  monitor_metric: f1_macro
+
+paths:
+  model_dir: models/efficientnet_b0_multiclass
+  output_dir: outputs/efficientnet_b0_multiclass

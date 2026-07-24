@@ -1,0 +1,6 @@
+,Pred: No DR,Pred: Mild DR,Pred: Moderate DR,Pred: Severe DR,Pred: Proliferative DR
+True: No DR,195,3,1,0,0
+True: Mild DR,0,24,6,0,0
+True: Moderate DR,2,26,49,10,0
+True: Severe DR,0,0,9,8,0
+True: Proliferative DR,0,6,8,9,10

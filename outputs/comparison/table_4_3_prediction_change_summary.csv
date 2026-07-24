@@ -1,0 +1,9 @@
+category,count
+Errors fixed by preprocessing,4
+New errors introduced by preprocessing,3
+Wrong in both models,4
+Correct in both models,355
+False Positive -> True Negative,3
+False Negative -> True Positive,1
+True Positive -> False Negative,3
+True Negative -> False Positive,0

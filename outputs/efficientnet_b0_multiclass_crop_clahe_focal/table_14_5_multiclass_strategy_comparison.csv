@@ -1,0 +1,9 @@
+metric,Crop + CLAHE,Weighted Sampler,Focal Loss
+accuracy,0.8033,0.811475,0.786885
+precision_macro,0.6325,0.634811,0.631129
+recall_macro,0.6274,0.619755,0.643398
+f1_macro,0.6156,0.615444,0.611992
+f1_weighted,0.8051,0.812171,0.794224
+qwk,0.8702,0.875984,0.858583
+roc_auc_ovr_macro,0.9325,0.899095,0.931568
+roc_auc_ovr_weighted,0.9623,0.952556,0.962649
