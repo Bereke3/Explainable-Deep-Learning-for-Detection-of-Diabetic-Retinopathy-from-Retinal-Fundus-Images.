@@ -1,0 +1,69 @@
+{
+  "version": "aptos2019_clean_binary_v1",
+  "seed": 42,
+  "source_manifest_sha256": "80a2e24622090c0b40c916a3f09025da834227547ad74d00127b0a118dcab629",
+  "source_csvs": {
+    "train": {
+      "csv": "data/raw/aptos2019/train_1.csv",
+      "sha256": "9891ab0a698197cbe15a694ae5e50f4446ec812587697a036e02981cfa44c904"
+    },
+    "valid": {
+      "csv": "data/raw/aptos2019/valid.csv",
+      "sha256": "844684bf04024981310cbfd2e7f158aa9d77afb6f1a1b579f7295523b753f395"
+    },
+    "test": {
+      "csv": "data/raw/aptos2019/test.csv",
+      "sha256": "ddb19e46c58b5a03c61638a62717de1b2786c998e27bad4a4644be70eff01192"
+    }
+  },
+  "source_images": 3662,
+  "quarantined_images": 8,
+  "quarantined_exact_groups": 4,
+  "removed_duplicate_copies": 124,
+  "retained_images": 3530,
+  "representative_rule": "lexicographically first id_code per exact RGB group",
+  "quarantine_rule": "all members of exact groups with conflicting binary labels",
+  "similarity_rule": "all retained image pairs, DCT pHash distance <= 4; transitive components stay in one split",
+  "similarity_interpretation": "conservative grouping only; not verified duplicates or patient identities",
+  "candidate_edges": 2344,
+  "similarity_groups": 2507,
+  "largest_group": 179,
+  "split_rule": "StratifiedGroupKFold(10, shuffle=True, random_state=42); fold 0=test, 1=valid, 2-9=train",
+  "sklearn_version": "1.9.0",
+  "split_sizes": {
+    "test": 354,
+    "train": 2822,
+    "valid": 354
+  },
+  "binary_counts": {
+    "test": {
+      "0": 180,
+      "1": 174
+    },
+    "train": {
+      "0": 1436,
+      "1": 1386
+    },
+    "valid": {
+      "0": 180,
+      "1": 174
+    }
+  },
+  "verification": {
+    "exact_cross_split_pairs": 0,
+    "similarity_cross_split_pairs_at_cutoff": 0,
+    "group_overlap": 0,
+    "unique_images": 3530,
+    "similarity_groups": 2507
+  },
+  "limits": "Repartitioned internal data, previously explored. Not external validation; patient independence unverified; pHash misses some duplicates and can group unrelated images.",
+  "file_sha256": {
+    "duplicate_copies.csv": "15c221c8fb14f85b7ac55ca5c0ca141e021daa9df40da301e348479b8e790858",
+    "manifest.csv": "e71025cd31537155a168d7f17ed654cfe94427ce44924c65cb8bd5b00c05d792",
+    "quarantined.csv": "6eff50520a2bbc5551d20cd82c0bcc81cd4ac5995e5363ee366628676f2d713a",
+    "similarity_edges.csv": "419787cae97d2a0c3a284aeb473a1b5652a06b5db7064edac6a49b401081bf66",
+    "test.csv": "3da2f3e9a483907ad755d663c0f2df133e899959e1fa44ff193ac251543df213",
+    "train.csv": "65debd4b9ee40977e45419edeccc8491ab630756a3ab140327226756b1b331ee",
+    "valid.csv": "180e6e30b02ce64405113fcf3b1b95485bec74e3a91baa498c94a9a0c0c6b54c"
+  }
+}

@@ -1,0 +1,14 @@
+dist/
+build/
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.lol
+*.log
+*.lot
+*.out
+*.synctex.gz
+*.toc

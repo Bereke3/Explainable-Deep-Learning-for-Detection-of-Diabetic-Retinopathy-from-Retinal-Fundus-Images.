@@ -1,0 +1,14 @@
+{
+  "image_path": "/Users/berekebaimuratov/Desktop/Detection of Diabetic Retinopathy/data/raw/aptos2019/test_images/test_images/e4dcca36ceb4.png",
+  "predicted_label": 0,
+  "predicted_class": "No DR",
+  "no_dr_probability": 1.0,
+  "dr_probability": 1.010292313675075e-13,
+  "predicted_class_score": 1.0,
+  "model_name": "efficientnet_b0",
+  "checkpoint_sha256": "4082cd44b40de7ab12acdeedee0d0e19ed94b575c6513ec078a99282e120243a",
+  "config_sha256": "3463e5585fed9d85899a2ddec97f4feef3e0c8fb737f83994d9ae8ac9dcaf228",
+  "decision_rule": "argmax of two softmax scores; exact tie selects No DR",
+  "score_note": "Uncalibrated model scores, not a clinical probability of disease.",
+  "scope": "Research prototype; no automatic fundus-quality or out-of-distribution gate."
+}

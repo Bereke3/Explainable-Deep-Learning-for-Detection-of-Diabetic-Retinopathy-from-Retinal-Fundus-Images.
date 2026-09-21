@@ -1,0 +1,40 @@
+{
+  "model_name": "efficientnet_b0",
+  "checkpoint_sha256": "4082cd44b40de7ab12acdeedee0d0e19ed94b575c6513ec078a99282e120243a",
+  "config_sha256": "3463e5585fed9d85899a2ddec97f4feef3e0c8fb737f83994d9ae8ac9dcaf228",
+  "decision_rule": "argmax of two softmax scores; exact tie selects No DR",
+  "score_note": "Uncalibrated model scores, not a clinical probability of disease.",
+  "scope": "Research prototype; no automatic fundus-quality or out-of-distribution gate.",
+  "device": "mps",
+  "torch_version": "2.12.1",
+  "test_size": 366,
+  "metrics": {
+    "accuracy": 0.9890710382513661,
+    "precision": 0.9939393939393939,
+    "recall": 0.9820359281437125,
+    "f1_score": 0.9879518072289156,
+    "roc_auc": 0.9983149279330785,
+    "specificity": 0.9949748743718593
+  },
+  "confusion_counts": {
+    "TN": 198,
+    "FP": 1,
+    "FN": 3,
+    "TP": 164
+  },
+  "historical_metrics_reproduced": true,
+  "compared_metrics": [
+    "accuracy",
+    "f1_score",
+    "precision",
+    "recall",
+    "roc_auc"
+  ],
+  "exact_overlap_test_images": 24,
+  "errors_with_conflicting_duplicate_labels": [
+    "ea15a290eb96"
+  ],
+  "audit_status": "issues_found",
+  "evaluation_scope": "Historical internal test split; not a new external validation.",
+  "gradcam_scope": "Class-logit attribution, independently normalized per target; no lesion-level ground truth."
+}

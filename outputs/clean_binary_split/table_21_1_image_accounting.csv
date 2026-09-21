@@ -1,0 +1,8 @@
+item,count
+Original image records,3662
+Quarantined conflicting-label records,8
+Redundant exact copies omitted,124
+Retained unique images,3530
+Conservative similarity groups,2507
+Similarity candidate edges,2344
+Largest group,179

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import json
+import platform
 import random
+import time
 from pathlib import Path
 from typing import Any
 
@@ -481,7 +484,19 @@ def run_training(config: dict[str, Any], project_root: str | Path) -> dict[str, 
     _set_random_seed(training_cfg.get("seed", 42))
 
     model_dir = resolve_path(project_root, paths_cfg["model_dir"])
+    best_model_path = model_dir / "best_model.pt"
+    if training_cfg.get("prevent_overwrite", False) and best_model_path.exists():
+        raise FileExistsError(f"Preserving the existing experiment: {best_model_path}")
+    if training_cfg.get("verify_clean_split", False):
+        from .clean_split import verify_clean_split
+
+        verify_clean_split(project_root, verify_images=True)
     model_dir.mkdir(parents=True, exist_ok=True)
+    output_dir = resolve_path(project_root, paths_cfg["output_dir"])
+    save_artifacts = training_cfg.get("save_run_artifacts", False)
+    if save_artifacts:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        (output_dir / "config_snapshot.json").write_text(json.dumps(config, indent=2) + "\n")
     train_records, val_records, test_records = _load_records_from_config(
         dataset_cfg=dataset_cfg,
         training_cfg=training_cfg,
@@ -500,9 +515,9 @@ def run_training(config: dict[str, Any], project_root: str | Path) -> dict[str, 
         seed=training_cfg.get("seed", 42),
     )
 
-    all_records = [train_records, val_records, test_records]
-    num_classes = len({int(label) for records in all_records for label in records["label"].tolist()})
+    num_classes = int(training_cfg.get("num_classes", len(set(train_records["label"].tolist()))))
     device = _select_device()
+    print(f"Device: {device}; initialization: {'ImageNet' if training_cfg.get('pretrained', False) else 'random'}", flush=True)
     model = build_model(
         model_name=training_cfg.get("model_name", "resnet18"),
         num_classes=num_classes,
@@ -534,11 +549,14 @@ def run_training(config: dict[str, Any], project_root: str | Path) -> dict[str, 
         lr=training_cfg.get("learning_rate", 3e-4),
         weight_decay=training_cfg.get("weight_decay", 0.0),
     )
-    best_model_path = model_dir / "best_model.pt"
     monitor_metric = training_cfg.get("monitor_metric", _default_monitor_metric(num_classes))
     best_metric_value = -1.0
+    best_epoch = None
+    history = []
+    started = time.monotonic()
 
     for epoch in range(1, training_cfg.get("num_epochs", 5) + 1):
+        epoch_start = time.monotonic()
         train_metrics = _run_epoch(model, train_loader, criterion, device, optimizer=optimizer)
         val_metrics = _run_epoch(model, val_loader, criterion, device, optimizer=None)
 
@@ -547,26 +565,36 @@ def run_training(config: dict[str, Any], project_root: str | Path) -> dict[str, 
             f"train_loss={train_metrics['loss']:.4f}, "
             f"train_{monitor_metric}={train_metrics[monitor_metric]:.4f}, "
             f"val_loss={val_metrics['loss']:.4f}, "
-            f"val_{monitor_metric}={val_metrics[monitor_metric]:.4f}"
+            f"val_{monitor_metric}={val_metrics[monitor_metric]:.4f}",
+            flush=True,
         )
 
         if val_metrics[monitor_metric] > best_metric_value:
             best_metric_value = val_metrics[monitor_metric]
+            best_epoch = epoch
             torch.save(
                 {
                     "model_state_dict": model.state_dict(),
                     "model_name": training_cfg.get("model_name", "resnet18"),
                     "num_classes": num_classes,
                     "monitor_metric": monitor_metric,
+                    "epoch": epoch,
+                    "validation_metric": float(best_metric_value),
                 },
                 best_model_path,
             )
+        history.append({"epoch": epoch, "seconds": time.monotonic() - epoch_start,
+                        "train": train_metrics, "valid": val_metrics})
+        if save_artifacts:
+            (output_dir / "training_history.json").write_text(json.dumps(history, indent=2) + "\n")
 
-    checkpoint = torch.load(best_model_path, map_location=device)
-    model.load_state_dict(checkpoint["model_state_dict"])
-    test_metrics = _run_epoch(model, test_loader, criterion, device, optimizer=None)
+    test_metrics = None
+    if training_cfg.get("evaluate_test", True):
+        checkpoint = torch.load(best_model_path, map_location=device, weights_only=True)
+        model.load_state_dict(checkpoint["model_state_dict"])
+        test_metrics = _run_epoch(model, test_loader, criterion, device, optimizer=None)
 
-    return {
+    result = {
         "best_model_path": str(best_model_path),
         "test_metrics": test_metrics,
         "split_sizes": {
@@ -575,4 +603,21 @@ def run_training(config: dict[str, Any], project_root: str | Path) -> dict[str, 
             "test": len(test_records),
         },
         "monitor_metric": monitor_metric,
+        "best_epoch": best_epoch,
+        "best_validation_metric": float(best_metric_value),
+        "device": str(device),
+        "elapsed_seconds": time.monotonic() - started,
+        "torch_version": str(torch.__version__),
+        "python_version": platform.python_version(),
+        "test_evaluated": bool(training_cfg.get("evaluate_test", True)),
     }
+    if save_artifacts:
+        from .audit import file_sha256
+
+        result["checkpoint_sha256"] = file_sha256(best_model_path)
+        result["split_csv_sha256"] = {
+            split: file_sha256(resolve_path(project_root, dataset_cfg[f"{split}_csv_path"]))
+            for split in ["train", "valid", "test"]
+        }
+        (output_dir / "training_summary.json").write_text(json.dumps(result, indent=2) + "\n")
+    return result

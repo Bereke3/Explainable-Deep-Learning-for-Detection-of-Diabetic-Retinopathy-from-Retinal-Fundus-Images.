@@ -1,0 +1,35 @@
+\chapter{Background and Related Work}
+\label{chap:background}
+
+\section{Diabetic Retinopathy and Fundus Images}
+\label{sec:dr-background}
+\writingnote{Explain the original five severity labels and the binary detection
+task. Use cited examples of fundus images only where they help the reader
+understand the input and labels. Do not equate every DR-present image with
+referable or severe disease.}
+
+\section{CNNs and Transfer Learning}
+\label{sec:transfer-learning}
+\writingnote{Introduce only the CNN concepts needed later: feature extraction,
+the classification head, pretraining, and fine-tuning. Starter method references
+are ResNet~\cite{he2016resnet} and EfficientNet~\cite{tan2019efficientnet}.
+Add verified references for other architectures actually discussed.}
+
+\section{Explainability and Grad-CAM}
+\label{sec:explainability-background}
+\writingnote{Explain the purpose and basic mechanism of
+Grad-CAM~\cite{selvaraju2017gradcam}. Separate visual attribution from lesion
+segmentation, causal explanation, and clinical validation. Reserve details of
+our chosen target layer and implementation for Chapter~\ref{chap:methods}.}
+
+\section{Related Studies and Positioning}
+\label{sec:related-work}
+\writingnote{Compare relevant DR studies using the fields in
+Table~\ref{tab:related-work}. Explain differences in datasets, labels, and
+validation protocols before discussing scores. Identify the scope of this work
+without claiming an unverified research gap or state-of-the-art result.}
+
+\tableplaceholder{Comparison framework for related DR studies.}{tab:related-work}{%
+Populate with verified studies. Columns: source and year; dataset; binary or
+multiclass task; method; evaluation protocol; metrics; explainability; limitations.
+Split a wide table rather than reducing the text to an unreadable size.}

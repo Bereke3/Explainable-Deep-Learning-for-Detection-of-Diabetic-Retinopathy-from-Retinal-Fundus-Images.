@@ -1,0 +1,45 @@
+{
+  "model_name": "efficientnet_b0",
+  "checkpoint_sha256": "c49e5aa6c31fd332a401dfbe5eca6bebb5632ab3bc28ac1a2f96163d62fbcb2b",
+  "config_sha256": "908c7ed31f6e6f0c6eb8715b6c07c96c17aee4643798d771ab5b9f66cfb199b2",
+  "decision_rule": "argmax of two softmax scores; exact tie selects No DR",
+  "score_note": "Uncalibrated model scores, not a clinical probability of disease.",
+  "scope": "Research prototype; no automatic fundus-quality or out-of-distribution gate.",
+  "device": "mps",
+  "metrics": {
+    "accuracy": 0.9830508474576272,
+    "precision": 0.9941176470588236,
+    "recall": 0.9712643678160919,
+    "f1": 0.9825581395348837,
+    "roc_auc": 0.9951787994891443,
+    "specificity": 0.9944444444444445,
+    "loss": 0.09481832540136642
+  },
+  "confusion_counts": {
+    "TN": 179,
+    "FP": 1,
+    "FN": 5,
+    "TP": 169
+  },
+  "test_size": 354,
+  "best_epoch": 5,
+  "best_validation_f1": 0.9855072463768116,
+  "split_protocol_sha256": "ddc08f046b30b9b20c5969a628159979247a576f335cd45e3d937b1a3b0e578e",
+  "evaluation_scope": "Corrected internal repartition after historical exploration; not external or patient-verified validation.",
+  "artifact_sha256": {
+    "figure_22_1_confusion_matrix.png": "dfe23fe8fda65a3852b32fceafbb1403978fbe4a999d81e0ad17168622690a2f",
+    "figure_22_2_roc_curve.png": "6ca8bb0501da15670ef81e85147f461f50552df92fa64976e8632febef46dcfd",
+    "figure_22_3_training_curves.png": "c5d85f6716fd19f873a2aaf523af383510c04703297629c5e1342b8c818b224b",
+    "image_22_1_513b0a4651fa_fn.png": "2e239a90c377c764f39422eb863c90c5944607f6917e8399a15463099c8aafec",
+    "image_22_2_73881f55a3ec_fn.png": "cea519bf24f5cb00eff389ae7485312c092135f663508f389c0802233b483e03",
+    "image_22_3_a443c4fd489c_fn.png": "0fbf375ec87233f3fa53686edbbe9b9a4518919a14b65b3218353b03c7532322",
+    "image_22_4_d06ccd0cf4b8_fn.png": "184ee41c56d3ff2d9bd345ad255f5fc95107be0af55f790cb2a08150bfd32b81",
+    "image_22_5_d5b4705ac2ee_fn.png": "7520c934aaaf621ba6b44eba7af2ed49d2586966e58fb04fe87241385e20057a",
+    "image_22_6_d9e58e4d8689_fp.png": "287289171335de56ccd5da35d979bf89644ba85b0073106e091a64cb1afac7b0",
+    "table_22_1_test_predictions.csv": "8fdd23e49b1b0e079cd18ca5e29955b173758b16a2049bbcf486f11eda65d3de",
+    "table_22_2_test_metrics.csv": "de2b41b48dc07167735ad520f26e0f0f41428116e180e0f4757664c2c887ef8b",
+    "table_22_3_confusion_counts.csv": "8d81632a48f15e112e244f24fb53bf0c690a5bc4dc5d197c94fb9f20ac54cb43",
+    "table_22_4_all_errors.csv": "ee3cddf18c75e3cbf8f103db2c19a5e8898447a397e1072ccb2f330ec16eb242",
+    "table_22_5_training_history.csv": "3e328064bf91c37f135abcae686077f0fcb1c34141db4cc92248c0355456bd1d"
+  }
+}

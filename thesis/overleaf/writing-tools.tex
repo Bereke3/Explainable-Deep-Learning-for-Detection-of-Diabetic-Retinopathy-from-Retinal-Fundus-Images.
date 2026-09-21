@@ -1,0 +1,31 @@
+% These helpers mark unfinished content. Replace every use before submission.
+\newcommand{\writingnote}[1]{%
+    \par\begingroup
+    \small\setstretch{1.0}
+    \noindent\textbf{Writing note (not thesis text).} #1\par
+    \endgroup\medskip
+}
+
+\newcommand{\figureplaceholder}[3]{%
+    \begin{figure}[htbp]
+        \centering
+        \fbox{\begin{minipage}[c][3cm][c]{0.9\linewidth}
+            \centering\small\setstretch{1.0}
+            \textbf{Figure placeholder}\par\medskip #3
+        \end{minipage}}
+        \caption{#1}
+        \label{#2}
+    \end{figure}
+}
+
+\newcommand{\tableplaceholder}[3]{%
+    \begin{table}[htbp]
+        \centering
+        \caption{#1}
+        \label{#2}
+        \fbox{\begin{minipage}{0.9\linewidth}
+            \small\setstretch{1.0}
+            \textbf{Table placeholder}\par\medskip #3
+        \end{minipage}}
+    \end{table}
+}

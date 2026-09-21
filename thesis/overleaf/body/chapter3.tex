@@ -1,0 +1,79 @@
+\chapter{Materials and Methods}
+\label{chap:methods}
+
+\section{Study Design}
+\label{sec:study-design}
+\writingnote{Present one APTOS-based study with exploratory and final evaluation
+stages. Identify which artifacts belong to each stage. Keep the main narrative
+compact; detailed audit and split-construction rules belong in
+Appendix~\ref{app:data-protocol}.}
+
+\figureplaceholder{Overview of the study and final evaluation workflow.}{fig:workflow}{%
+Draw data preparation and grouped splitting, training on train only, checkpoint
+selection using validation, and evaluation of the frozen model on test.
+Show Grad-CAM as an analysis branch, not an input label or a training target.}
+
+\section{Dataset and Target Definition}
+\label{sec:dataset}
+\writingnote{Document the actual APTOS distribution used, its source, original
+image count, and label mapping: grade 0 becomes No DR; grades 1--4 become DR
+Present. Distinguish the received CSV partitions from the original competition's
+unlabelled test set. Preserve a citation to the dataset and its provenance.}
+
+\section{Data Preparation and Partitioning}
+\label{sec:data-preparation}
+\writingnote{Describe the final preparation briefly and accurately: from 3,662
+records, exclude eight records with conflicting binary labels and 124 redundant
+exact copies, retaining 3,530 images. Keep detected similarity groups together
+in the final split: 2,822 train, 354 validation, and 354 test. Explain that
+image-content checks do not establish patient independence. Put hashing,
+grouping, and fold-assignment details in Appendix~\ref{app:data-protocol}.}
+
+\tableplaceholder{Class distribution in the final binary partitions.}{tab:dataset-splits}{%
+Columns: partition; No DR; DR Present; total. Use the frozen split counts listed
+in MATERIALS\_MAP.md. Do not mix historical and final split sizes.}
+
+\section{Image Processing and Augmentation}
+\label{sec:image-processing}
+\writingnote{Describe the final RGB resizing, ImageNet normalization, and
+training-only augmentations. Optional crop and CLAHE were not used in the final
+binary configuration. Describe those exploratory variants separately where
+their results are reported; do not present them as part of the final pipeline.}
+
+\section{Model Architectures}
+\label{sec:architectures}
+\writingnote{Summarize the exploratory custom CNN, ResNet18, DenseNet121,
+EfficientNet-B0, and EfficientNet-B4. Describe the final EfficientNet-B0 and its
+two-output head in more detail. State which weights were pretrained and which
+were initialized for the task; do not describe fine-tuning as training from scratch.}
+
+\figureplaceholder{Architecture of the final binary classifier.}{fig:binary-architecture}{%
+Show a 224 by 224 RGB input, EfficientNet-B0 feature extractor, pooling, and the
+two-output classification head. Mark the actual layer used for Grad-CAM after
+checking the implementation.}
+
+\section{Training and Model Selection}
+\label{sec:training}
+\writingnote{Document the final configuration and computing environment using
+the saved configuration and run summary. Explain validation-only checkpoint
+selection and the frozen decision rule. The final run started from ImageNet
+weights, not from the historical retinal-model checkpoint.}
+
+\tableplaceholder{Training settings for the final EfficientNet-B0 experiment.}{tab:training-settings}{%
+Include initialization, input size, epochs, batch size, optimizer, learning rate,
+loss, augmentations, sampling, seed, device, and checkpoint selection criterion.
+Use saved settings rather than parameters from the friends' thesis examples.}
+
+\section{Evaluation Metrics}
+\label{sec:metrics}
+\writingnote{Define DR Present as the positive class. Explain accuracy,
+precision, sensitivity/recall, specificity, F1, ROC-AUC, and confusion counts.
+Distinguish binary metrics from macro/weighted multiclass metrics. Give metric
+definitions here and measured values in Chapter~\ref{chap:results}.}
+
+\section{Grad-CAM and Error Analysis Protocol}
+\label{sec:gradcam-method}
+\writingnote{Specify the checkpoint, target layer, target output score,
+normalization, and overlay construction. Describe analysis of all six final
+test errors, including maps for both output logits. Explain any additional
+example-selection rule. Do not imply lesion-mask or ophthalmologist validation.}

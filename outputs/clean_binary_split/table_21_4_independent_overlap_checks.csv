@@ -1,0 +1,4 @@
+check,count
+Exact RGB groups spanning splits,0
+Similarity components spanning splits,0
+Recomputed cross-split pHash candidates (distance <= 4),0

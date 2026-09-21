@@ -1,0 +1,62 @@
+\chapter{Experimental Results}
+\label{chap:results}
+
+\section{Overview of Experiments}
+\label{sec:experiment-overview}
+\writingnote{Summarize the preliminary architecture comparison and the final
+EfficientNet-B0 experiment. Explicitly distinguish their partitions: only B0
+was retrained under the final protocol. Refer to
+Appendix~\ref{app:exploratory} for historical binary and multiclass tables.
+Do not merge both stages into one model ranking.}
+
+\section{Final Binary Classification Results}
+\label{sec:final-binary-results}
+\writingnote{Report the frozen results for the 354-image internal test set.
+Check Table~\ref{tab:final-metrics} against the saved CSV and describe
+Figures~\ref{fig:confusion-matrix} and \ref{fig:roc}. Do not substitute the old
+366-image test results or attribute an old/new score difference solely to cleaning.}
+
+\tableplaceholder{Performance on the final internal test set.}{tab:final-metrics}{%
+Use the final metric CSV. Include accuracy, precision, sensitivity, specificity,
+F1, ROC-AUC, and the test-set size. Keep decimal precision consistent.}
+
+\figureplaceholder{Confusion matrix on the final internal test set.}{fig:confusion-matrix}{%
+Insert the final matrix: TN 179, FP 1, FN 5, TP 169. Label true and predicted
+classes clearly. Re-export without the notebook's embedded figure number.}
+
+\figureplaceholder{ROC curve on the final internal test set.}{fig:roc}{%
+Insert the final ROC curve and its AUC. Identify DR Present as the positive
+class. Do not use a curve from the historical split.}
+
+\section{Training and Validation Behaviour}
+\label{sec:learning-behaviour}
+\writingnote{Describe the five-epoch learning curves and the selection of
+epoch 5 using validation F1. Training metrics use augmented images during
+optimization, whereas validation metrics use evaluation transforms.}
+
+\figureplaceholder{Training and validation curves for the final experiment.}{fig:learning-curves}{%
+Use panels for loss and F1; keep train and validation legends consistent.
+Do not label validation performance as test performance.}
+
+\section{Error Analysis}
+\label{sec:error-results}
+\writingnote{Report all five false negatives and the one false positive.
+All false negatives have original grade-1 annotations; present this as a
+dataset-label observation, not an independently confirmed diagnosis.
+Distinguish model scores from calibrated diagnostic probabilities.}
+
+\tableplaceholder{All misclassified images in the final test set.}{tab:final-errors}{%
+Columns: image identifier; original annotation; true binary label; prediction;
+error type; DR score. Use the saved six-row error table.}
+
+\section{Grad-CAM Visualizations}
+\label{sec:gradcam-results}
+\writingnote{Describe observable attribution patterns without asserting that
+highlighted regions are medically confirmed lesions. Discuss mistakes as well
+as any transparently selected correct examples. Retain the full six-error set
+in the final figure or supplementary panels rather than cherry-picking maps.}
+
+\figureplaceholder{Grad-CAM panels for misclassified test images.}{fig:gradcam-errors}{%
+Prepare readable panels showing model input and maps for both class logits.
+Identify the target class, annotation, prediction, and image ID. Split into
+multiple numbered figures if necessary; do not squeeze six cases onto one page.}

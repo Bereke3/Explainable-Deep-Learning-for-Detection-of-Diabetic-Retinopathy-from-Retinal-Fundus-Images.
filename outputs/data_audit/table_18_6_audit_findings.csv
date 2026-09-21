@@ -1,0 +1,12 @@
+check,count
+Missing files,0
+Unreadable files,0
+Invalid original grades,0
+Repeated ID groups,0
+"Exact duplicate pairs, all splits",134
+Exact duplicate pairs across splits,47
+Test images matching train or validation,24
+Exact pairs with different original grades,32
+Exact pairs with different binary labels,4
+Cross-split binary-label conflicts,2
+Perceptual candidates requiring review,747

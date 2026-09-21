@@ -29,7 +29,10 @@ def main() -> None:
     print("Training complete.")
     print(f"Split sizes: {results['split_sizes']}")
     print(f"Best model saved to: {results['best_model_path']}")
-    print(f"Test metrics: {results['test_metrics']}")
+    if results["test_metrics"] is None:
+        print("Test evaluation deferred by configuration until after checkpoint selection.")
+    else:
+        print(f"Test metrics: {results['test_metrics']}")
 
 
 if __name__ == "__main__":

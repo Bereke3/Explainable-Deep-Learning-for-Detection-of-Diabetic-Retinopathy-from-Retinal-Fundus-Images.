@@ -1,0 +1,4 @@
+split,No DR,DR Present,total
+train,1436,1386,2822
+valid,180,174,354
+test,180,174,354

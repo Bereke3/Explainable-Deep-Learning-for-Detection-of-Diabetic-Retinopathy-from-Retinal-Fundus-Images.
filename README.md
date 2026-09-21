@@ -2,6 +2,12 @@
 
 This repository contains a deep learning pipeline for detecting and grading diabetic retinopathy from retinal fundus images. The project compares transfer-learning architectures with a custom convolutional neural network, evaluates retinal-image preprocessing methods, and applies Grad-CAM to explain model predictions.
 
+**Evaluation update (2026-09-18):** the content-level audit found 47 exact duplicate pairs across the supplied splits; 24 test images match training or validation images. Some exact copies also have conflicting labels. Earlier scores are preliminary internal results, not a clean final evaluation. See [the audit and error-analysis report](notes/FINAL_BINARY_REVIEW.md) and checkpoint DR-CP-016 before citing them.
+
+The separate [corrected binary experiment](notes/CLEAN_BINARY_EXPERIMENT.md) uses exact deduplication, conflicting-label quarantine, and conservative similarity groups. Its frozen split has 2,822 training, 354 validation, and 354 test images. Historical model rankings do not automatically apply to this repartition.
+
+The corrected EfficientNet-B0 run is complete: accuracy **98.31%**, F1 **98.26%**, recall **97.13%**, and ROC-AUC **0.9952**, with five false negatives and one false positive. These are corrected internal results, not external or patient-verified validation.
+
 The implementation supports both:
 
 - **binary classification** for diabetic retinopathy screening;
@@ -380,3 +386,44 @@ Generated files are organized under the `outputs/` directory to keep results fro
 ## Repository Scope
 
 This repository is intended for academic experimentation with diabetic retinopathy classification and explainable deep learning. The current pipeline focuses on model comparison, preprocessing analysis, error analysis, and Grad-CAM-based interpretation of retinal fundus image classifiers.
+
+## Integrity Audit and Final Demonstration
+
+Run these notebooks in order with the project `.venv` kernel:
+
+1. [18: dataset integrity audit](notebooks/validation/18_dataset_integrity_audit.ipynb) scans all images and exports duplicate and conflicting-label evidence.
+2. [19: complete EfficientNet-B0 error analysis](notebooks/transfer_learning/19_efficientnet_b0_error_analysis.ipynb) reproduces the historical scores and explains every error with maps for both classes.
+3. [20: single-image demonstration](notebooks/transfer_learning/20_single_image_demo.ipynb) takes an editable image path and exports predictions and Grad-CAM.
+
+The equivalent commands are:
+
+```bash
+.venv/bin/python3 scripts/audit_dataset.py
+.venv/bin/python3 scripts/analyze_final_errors.py
+.venv/bin/python3 scripts/predict_image.py --image data/raw/aptos2019/test_images/test_images/e4dcca36ceb4.png
+```
+
+The audit reads the original data without modifying it. Inference requires the existing `models/efficientnet_b0_baseline/best_model.pt`; model weights and dataset images are excluded from Git. No model training or pretrained-weight download is needed for these three steps. Output folders are `outputs/data_audit`, `outputs/final_error_analysis`, and `outputs/single_image_demo`.
+
+The single-image notebook uses the first test image when `image_path = None`. Set `image_path` to an absolute path or a path relative to this project for another image. Re-running it replaces its demonstration outputs. Scores are uncalibrated, and the prototype does not reject non-fundus or low-quality inputs.
+
+Focused verification:
+
+```bash
+.venv/bin/python3 -m unittest discover -s tests -v
+```
+
+## Corrected Binary Experiment
+
+- [21: corrected split verification](notebooks/validation/21_clean_binary_split.ipynb) documents exclusions, frozen CSVs, and independent overlap checks.
+- [22: corrected EfficientNet-B0 results](notebooks/transfer_learning/22_efficientnet_b0_clean_binary_results.ipynb) reads the validation-selected model's test results, ROC, confusion matrix, learning curves, and error explanations.
+
+```bash
+.venv/bin/python3 scripts/prepare_clean_split.py --verify-only
+.venv/bin/python3 scripts/train_baseline.py --config configs/efficientnet_b0_clean_binary.yaml
+.venv/bin/python3 scripts/evaluate_clean_binary.py
+```
+
+The saved split CSVs reference the original image files; no image duplication is required. Split preparation and training refuse to overwrite an existing frozen split or model. Test inference is deferred until training has finished, and later evaluation runs reuse the saved results. The [experimental record](notes/CLEAN_BINARY_EXPERIMENT.md) explains the limitations of similarity grouping and internal evaluation.
+
+`scripts/predict_image.py` accepts `--config configs/efficientnet_b0_clean_binary.yaml` to use the corrected checkpoint. Use a separate `--output-dir`, such as `outputs/clean_binary_demo`, to retain the historical demonstration outputs.

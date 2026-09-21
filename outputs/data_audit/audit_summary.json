@@ -1,0 +1,64 @@
+{
+  "config_sha256": "3463e5585fed9d85899a2ddec97f4feef3e0c8fb737f83994d9ae8ac9dcaf228",
+  "sources": {
+    "train": {
+      "csv": "data/raw/aptos2019/train_1.csv",
+      "sha256": "9891ab0a698197cbe15a694ae5e50f4446ec812587697a036e02981cfa44c904"
+    },
+    "valid": {
+      "csv": "data/raw/aptos2019/valid.csv",
+      "sha256": "844684bf04024981310cbfd2e7f158aa9d77afb6f1a1b579f7295523b753f395"
+    },
+    "test": {
+      "csv": "data/raw/aptos2019/test.csv",
+      "sha256": "ddb19e46c58b5a03c61638a62717de1b2786c998e27bad4a4644be70eff01192"
+    }
+  },
+  "split_sizes": {
+    "test": 366,
+    "train": 2930,
+    "valid": 366
+  },
+  "missing_images": 0,
+  "unreadable_images": 0,
+  "invalid_labels": 0,
+  "repeated_id_groups": 0,
+  "cross_split_id_groups": 0,
+  "exact_duplicate_pairs": 134,
+  "exact_cross_split_pairs": 47,
+  "exact_duplicate_grade_conflicts": 32,
+  "exact_duplicate_binary_conflicts": 4,
+  "exact_cross_split_binary_conflicts": 2,
+  "test_images_matching_train_or_valid": [
+    "e4e343eaae2a",
+    "e740af6ac6ea",
+    "e76a9cbb2a8c",
+    "e7a7187066ad",
+    "ea05c22d92e9",
+    "ea15a290eb96",
+    "ea9e0fb6fb0b",
+    "eadc57064154",
+    "ed3a0fc5b546",
+    "ee2c2a5f7d0e",
+    "f03d3c4ce7fb",
+    "f066db7a2efe",
+    "f0f89314e860",
+    "f4d3777f2710",
+    "f6f3ea0d2693",
+    "f7edc074f06b",
+    "f920ccd926db",
+    "f9e1c439d4c8",
+    "f9ecf1795804",
+    "fcc6aa6755e6",
+    "fda39982a810",
+    "fe0fc67c7980",
+    "fea14b3d44b0",
+    "ff0740cb484a"
+  ],
+  "similar_cross_split_candidates": 747,
+  "phash_max_distance": 4,
+  "patient_independence": "unverified: these CSVs have no patient identifiers",
+  "test_protocol": "historical test results were consulted across multiple experiments",
+  "near_duplicate_status": "candidates require visual review; not an exhaustive duplicate search",
+  "status": "issues_found"
+}

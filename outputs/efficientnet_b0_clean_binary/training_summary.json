@@ -1,0 +1,23 @@
+{
+  "best_model_path": "/Users/berekebaimuratov/Desktop/Detection of Diabetic Retinopathy/models/efficientnet_b0_clean_binary/best_model.pt",
+  "test_metrics": null,
+  "split_sizes": {
+    "train": 2822,
+    "valid": 354,
+    "test": 354
+  },
+  "monitor_metric": "f1",
+  "best_epoch": 5,
+  "best_validation_metric": 0.9855072463768116,
+  "device": "mps",
+  "elapsed_seconds": 562.7929952080594,
+  "torch_version": "2.12.1",
+  "python_version": "3.11.15",
+  "test_evaluated": false,
+  "checkpoint_sha256": "c49e5aa6c31fd332a401dfbe5eca6bebb5632ab3bc28ac1a2f96163d62fbcb2b",
+  "split_csv_sha256": {
+    "train": "65debd4b9ee40977e45419edeccc8491ab630756a3ab140327226756b1b331ee",
+    "valid": "180e6e30b02ce64405113fcf3b1b95485bec74e3a91baa498c94a9a0c0c6b54c",
+    "test": "3da2f3e9a483907ad755d663c0f2df133e899959e1fa44ff193ac251543df213"
+  }
+}

@@ -1,0 +1,5 @@
+image_path,diagnosis,true_label,id_code,predicted_label,dr_probability,outcome,exact_match_in_train_or_valid,conflicting_binary_label_in_train_or_valid,image_number,panel_file
+data/raw/aptos2019/test_images/test_images/ea15a290eb96.png,1,1,ea15a290eb96,0,0.3386453092098236,FN,True,True,Image 19.1,image_19_1_ea15a290eb96_fn.png
+data/raw/aptos2019/test_images/test_images/eed4afc8ec83.png,1,1,eed4afc8ec83,0,0.0007262369035743177,FN,False,False,Image 19.2,image_19_2_eed4afc8ec83_fn.png
+data/raw/aptos2019/test_images/test_images/f9aa35187bf3.png,2,1,f9aa35187bf3,0,0.21459762752056122,FN,False,False,Image 19.3,image_19_3_f9aa35187bf3_fn.png
+data/raw/aptos2019/test_images/test_images/eb6b1f1c09db.png,0,0,eb6b1f1c09db,1,0.9996534585952759,FP,False,False,Image 19.4,image_19_4_eb6b1f1c09db_fp.png

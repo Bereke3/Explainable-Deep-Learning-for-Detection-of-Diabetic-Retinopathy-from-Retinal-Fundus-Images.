@@ -1,0 +1,76 @@
+\documentclass[a4paper, 12pt]{report}
+
+% \usepackage[italian]{babel} % IT
+\usepackage[english]{babel} % EN
+\usepackage{newlfont}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{wrapfig}
+\usepackage{subfig}
+\usepackage{listings}
+\lstset { 
+    %Formatting for code in appendix
+    basicstyle=\footnotesize,
+    literate={°}{{\"\deg}}1,
+    numbers=left,
+    stepnumber=1,
+    showstringspaces=false,
+    tabsize=1,
+    breaklines=true,
+    breakatwhitespace=false,
+}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{url}
+\usepackage[bookmarks=true]{hyperref}
+\hypersetup{
+        colorlinks=true,
+        linkcolor=black,
+        anchorcolor=black,
+        citecolor=black,
+        urlcolor=black,
+        pdftitle={Diabetic Retinopathy Detection using CNN},
+        pdfauthor={Baimuratov Bereke},
+        pdfkeywords={diabetic retinopathy, fundus images, CNN, transfer learning, Grad-CAM}
+}
+\usepackage{setspace} % imposta interlinea
+\doublespacing % interlinea 2
+\textwidth=450pt\oddsidemargin=0pt\linespread{1.4}
+\input{writing-tools}
+\setcounter{tocdepth}{1}
+
+\begin{document}
+
+    \hypersetup{pageanchor=false}
+    \input{front/frontespice}
+    \pagenumbering{roman}
+    \hypersetup{pageanchor=true}
+    \input{front/abstract}
+    \input{front/acknowledgement}
+    \input{front/index}
+    \input{front/indexfigures}
+    \input{front/indextables}
+    % Enable front/indexcode only if the thesis includes code listings.
+    \clearpage
+    \pagenumbering{arabic}
+    
+    \input{body/chapter1}
+    \input{body/chapter2}
+    \input{body/chapter3}
+    \input{body/chapter4}
+    \input{body/chapter5}
+    \input{body/chapter6}
+
+    \clearpage
+    \phantomsection
+    \addcontentsline{toc}{chapter}{\bibname}
+    \bibliographystyle{unsrt}
+    \bibliography{blibliography}
+
+    \appendix
+    \input{appendices/data-and-reproducibility}
+    \input{appendices/exploratory-experiments}
+
+\end{document}

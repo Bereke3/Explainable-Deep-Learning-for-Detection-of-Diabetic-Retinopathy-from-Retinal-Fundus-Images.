@@ -1,5 +1,9 @@
 # Project Checkpoints
 
+> Evaluation update, 2026-09-18: DR-CP-016 records confirmed cross-split duplicates and contradictory annotations. Earlier checkpoints preserve the experiment history; their claims of final validation must be read in light of this audit. See `notes/FINAL_BINARY_REVIEW.md`.
+
+> Latest completed experiment: DR-CP-017 records the corrected split, fresh EfficientNet-B0 training, and a separate 354-image internal test evaluation. See `notes/CLEAN_BINARY_EXPERIMENT.md` for the current results.
+
 ## DR-CP-001
 
 - Date: 2026-07-09
@@ -2106,6 +2110,254 @@ My next step should be to treat `EfficientNet-B0` as the leading final binary mo
 - stronger final result presentation;
 - and a thesis-ready summary that explains why `EfficientNet-B0` remains preferable to the larger `EfficientNet-B4`.
 
+
+## DR-CP-015
+
+### Final binary baseline summary and final model selection
+
+At this stage, I executed the notebook:
+
+- `notebooks/comparison/17_final_binary_summary.ipynb`
+
+The purpose of this notebook was not to train a new model, but to consolidate the strongest binary-classification results into one final, thesis-ready summary.
+
+By this point, I had already trained and analyzed several binary models, including:
+
+- `Custom CNN`
+- `ResNet18`
+- `ResNet18 + preprocessing`
+- `DenseNet121`
+- `EfficientNet-B0`
+- `EfficientNet-B4`
+
+The goal of this step was to make a clear final comparison and justify which binary model should be treated as the main final candidate for the diploma project.
+
+### What I summarized in this stage
+
+In this notebook, I collected and visualized:
+
+- the final binary metric comparison across the strongest models;
+- the comparison of false positives and false negatives;
+- the final model-selection table;
+- the explainability summary for the selected model;
+- and a consolidated Grad-CAM panel for the chosen final binary baseline.
+
+This stage was important because it transformed separate experiments into a coherent final binary results section.
+
+### Final selected binary model
+
+After reviewing the complete comparison, I selected:
+
+- `EfficientNet-B0`
+
+as the final binary baseline model of the project.
+
+The main reason is that it gave the strongest and most balanced practical result among the tested binary models.
+
+Its final test metrics were:
+
+- Accuracy: `0.9891`
+- Precision: `0.9939`
+- Recall: `0.9820`
+- F1-score: `0.9880`
+- ROC-AUC: `0.9983`
+
+Its confusion-matrix outcome was:
+
+- True Negative: `198`
+- False Positive: `1`
+- False Negative: `3`
+- True Positive: `164`
+
+This result is especially important because the model achieved both:
+
+- extremely strong overall classification performance;
+- and a very low number of clinically undesirable false negatives.
+
+### Why `EfficientNet-B0` remained the final choice
+
+At this point, I had also tested `EfficientNet-B4`, which is a larger architecture.
+
+However, the comparison showed that `EfficientNet-B4` did not improve the practical binary-classification result.
+Although its ROC-AUC was numerically very close, it produced more false positives and lower overall decision quality than `EfficientNet-B0`.
+
+Therefore, the final conclusion of this stage is:
+
+- larger architecture size did not automatically produce a better clinical classifier;
+- `EfficientNet-B0` remained the strongest binary decision model in the current project setup;
+- and it also remained a suitable model for explainability analysis with Grad-CAM.
+
+### Files produced in this stage
+
+The final summary notebook generated:
+
+- `outputs/final_binary_summary/table_17_1_final_binary_metrics_comparison.csv`
+- `outputs/final_binary_summary/table_17_2_final_binary_clinical_summary.csv`
+- `outputs/final_binary_summary/table_17_3_final_binary_selection_summary.csv`
+- `outputs/final_binary_summary/table_17_4_efficientnet_b0_explainability_summary.csv`
+- `outputs/final_binary_summary/table_17_5_final_binary_interpretation_summary.csv`
+- `outputs/final_binary_summary/figure_17_1_final_binary_metric_comparison.png`
+- `outputs/final_binary_summary/figure_17_2_final_binary_error_comparison.png`
+- `outputs/final_binary_summary/image_17_1_efficientnet_b0_gradcam_panel.png`
+
+### What this checkpoint proves
+
+This checkpoint proves that:
+
+- the binary branch of the project now has a complete experimental summary;
+- the strongest final binary model has been selected and justified;
+- the project already contains both performance evidence and explainability evidence for the chosen model;
+- and the binary pipeline is now mature enough to be written as a strong core part of the diploma thesis.
+
+### Next step
+
+My next step should be to move from experimentation into finalization.
+
+That means focusing on:
+
+- writing the thesis-ready narrative for methodology and results;
+- keeping the binary branch as the main final solution;
+- and using the multi-class branch as an additional advanced research direction rather than the central final model.
+
+
+## DR-CP-016
+
+### Dataset integrity audit, complete error analysis, and inference demonstration
+
+- Date: 2026-09-18
+- Status: Three finalization steps implemented; corrected final evaluation still required
+
+### What I completed
+
+I added three numbered notebooks and reusable Python entry points: a full integrity audit of the original APTOS split, an analysis of every error from the frozen EfficientNet-B0, and a single-image prediction workflow with Grad-CAM. I preserved the original images, labels, configurations, and trained weights.
+
+### What the audit revealed
+
+I decoded and hashed all 3,662 images. There were no missing files, unreadable images, invalid grades, or repeated image identifiers. However, there were 123 groups containing 251 images with identical content, corresponding to 134 exact duplicate pairs. All these pairs also had identical file hashes.
+
+I found 47 exact duplicate pairs across different splits: 23 train/test, 22 train/validation, and two validation/test pairs. In total, 24 distinct test images matched training or validation images. This means that checking only CSV identifiers had missed content-level leakage.
+
+I also found 32 exact pairs with conflicting severity grades and four exact pairs with conflicting binary labels. Two binary-conflict pairs cross split boundaries. The perceptual-hash check returned 747 additional cross-split candidates; these are candidates for review, not confirmed duplicates. Patient-level independence remains unverified because the CSVs contain no patient identifiers.
+
+### Reproduced historical results
+
+I loaded the saved EfficientNet-B0 checkpoint and reproduced its historical test metrics without training or threshold tuning:
+
+- Accuracy: 0.989071
+- Precision: 0.993939
+- Recall: 0.982036
+- F1-score: 0.987952
+- ROC-AUC: 0.998315
+- Specificity: 0.994975
+- TN: 198; FP: 1; FN: 3; TP: 164
+
+These values still describe the original split. I now classify them as preliminary internal results because of the duplicate overlap and because I consulted the same test results while comparing experiments. Reproducing a score does not establish that its evaluation protocol was independent.
+
+### What I learned from all four errors
+
+- `ea15a290eb96`: grade 1, predicted No DR, DR score approximately 0.338645. Its byte-identical training counterpart `1c9c583c10bf` is labeled grade 0. This is a contradictory-label example, so I cannot attribute the error solely to a failure to detect disease.
+- `eed4afc8ec83`: grade 1, predicted No DR, DR score approximately 0.000726. This shows a very confident error relative to the dataset annotation.
+- `f9aa35187bf3`: grade 2, predicted No DR, DR score approximately 0.2146.
+- `eb6b1f1c09db`: grade 0, predicted DR, DR score approximately 0.999653. Its DR map emphasizes broad peripheral regions, which motivates further investigation of acquisition cues without proving a causal shortcut.
+
+I exported Grad-CAM for both class logits for every error. The overlays use the exact transformed model input. I documented visual observations separately from medical conclusions; there were no lesion masks or specialist adjudication, and separately normalized heatmaps are not directly comparable importance scales.
+
+### Demonstration workflow
+
+I created a notebook and CLI that accept one image, apply the original evaluation transform, return the binary class and uncalibrated model scores, and save class-specific Grad-CAM panels. Each result includes model and configuration SHA-256 fingerprints. The default test image demonstrates functionality only; it is not an external evaluation. The system does not automatically reject non-fundus or poor-quality inputs.
+
+### Files and thesis material
+
+- `notebooks/validation/18_dataset_integrity_audit.ipynb`
+- `notebooks/transfer_learning/19_efficientnet_b0_error_analysis.ipynb`
+- `notebooks/transfer_learning/20_single_image_demo.ipynb`
+- `outputs/data_audit/`
+- `outputs/final_error_analysis/`
+- `outputs/single_image_demo/`
+- `notes/FINAL_BINARY_REVIEW.md`
+- `scripts/audit_dataset.py`, `scripts/analyze_final_errors.py`, `scripts/predict_image.py`
+
+### What must happen before final performance claims
+
+I executed all 23 code cells in notebooks 18-20 without errors. Seven focused automated tests passed. CPU and Apple MPS inference reproduced the same historical confusion counts and headline metrics, with small score differences in the final decimal places.
+
+I need to build a content-disjoint split after reviewing duplicate groups and quarantining or authoritatively resolving conflicting labels. I then need to retrain from the original initialization with model and checkpoint selection based on validation only. Removing test duplicates after training would not undo training/validation exposure. A corrected internal experiment must be reported separately from these historical results; no external evaluation has been completed.
+
+I can already use the reproducible implementation, audit findings, complete error analysis, and demonstration in my thesis draft. The audit supersedes the earlier interpretation that the numerical benchmark alone was ready to support final validation claims.
+
+## DR-CP-017
+
+### Corrected binary split and fresh EfficientNet-B0 experiment
+
+- Date: 2026-09-18
+- Status: Completed
+- Main record: `notes/CLEAN_BINARY_EXPERIMENT.md`
+
+### How I corrected the data protocol
+
+I verified the original image hashes, excluded all eight records in four exact groups with contradictory binary labels, and omitted 124 redundant exact copies. I retained 3,530 unique images and preserved all original files and annotations.
+
+For the remaining images, I recomputed pHash candidates over all pairs. I kept every connected component of pairs with Hamming distance at most four within a single split. This yielded 2,344 edges and 2,507 groups; the largest group contained 179 images. These groups are a conservative separation rule, not verified duplicate groups or patient identities. I did not automatically delete images on perceptual similarity alone.
+
+I used ten-fold StratifiedGroupKFold with shuffle enabled and seed 42. I fixed fold 0 as test, fold 1 as validation, and folds 2-9 as training before model training. The resulting split was:
+
+| Split | No DR | DR Present | Total |
+|---|---:|---:|---:|
+| Train | 1436 | 1386 | 2822 |
+| Validation | 180 | 174 | 354 |
+| Test | 180 | 174 | 354 |
+
+Both the stored-group verification and an independent all-pairs check found zero exact overlap and zero cross-split pHash candidates at the chosen cutoff. The split CSVs and policy are frozen under `data/splits/aptos2019_clean_binary_v1/` with checksums.
+
+### Training parameters and checkpoint selection
+
+I initialized EfficientNet-B0 from torchvision ImageNet weights with a fresh two-class head. I did not continue from the previous retinal-model checkpoint. I used RGB 224 x 224 input, ImageNet normalization, the existing flip/rotation/color-jitter augmentation for training, and no optional crop or CLAHE.
+
+The fixed settings were batch size 16, five epochs, Adam, learning rate 0.0003, weight decay 0, unweighted cross-entropy, ordinary shuffled sampling, two DataLoader workers, and seed 42. Training ran on Apple MPS with Python 3.11.15 and PyTorch 2.12.1. The recorded training-loop duration was 562.8 seconds.
+
+| Epoch | Train loss | Train F1 | Validation loss | Validation F1 |
+|---|---:|---:|---:|---:|
+| 1 | 0.163919 | 0.939776 | 0.064794 | 0.976608 |
+| 2 | 0.080387 | 0.975504 | 0.069093 | 0.970588 |
+| 3 | 0.067691 | 0.975557 | 0.054696 | 0.976744 |
+| 4 | 0.075214 | 0.979415 | 0.053377 | 0.982558 |
+| 5 | 0.034861 | 0.987752 | 0.041473 | 0.985507 |
+
+Epoch 5 had the highest validation F1 and was selected without computing test metrics during training. I then evaluated the frozen checkpoint with the fixed argmax decision rule. Re-running the result notebook reuses the saved evaluation after verifying its fingerprints.
+
+### Corrected internal test results
+
+- Accuracy: 0.9830508475
+- Precision: 0.9941176471
+- Recall: 0.9712643678
+- F1: 0.9825581395
+- ROC-AUC: 0.9951787995
+- Specificity: 0.9944444444
+- Cross-entropy loss: 0.0948183254
+- TN: 179; FP: 1; FN: 5; TP: 169
+
+The model correctly classified 348 of 354 test images. All five false negatives had original grade-1 annotations. I exported all six errors and Grad-CAM for both classes for every error, along with the confusion matrix, ROC curve, and learning curves. The scores remain uncalibrated model outputs, and Grad-CAM does not verify a lesion diagnosis.
+
+### Files produced and verification
+
+- `configs/efficientnet_b0_clean_binary.yaml`
+- `data/splits/aptos2019_clean_binary_v1/`
+- `models/efficientnet_b0_clean_binary/best_model.pt`
+- `notebooks/validation/21_clean_binary_split.ipynb`
+- `notebooks/transfer_learning/22_efficientnet_b0_clean_binary_results.ipynb`
+- `outputs/clean_binary_split/`
+- `outputs/efficientnet_b0_clean_binary/`
+- `notes/CLEAN_BINARY_EXPERIMENT.md`
+
+Both notebooks executed all 18 code cells without errors. Twelve focused automated tests passed, including validation-only model selection, preventing accidental checkpoint replacement, transitive grouping, conflict quarantine, and cached test-evaluation integrity.
+
+### Interpretation for my thesis
+
+I now have a completed corrected internal experiment to report separately from the original exploratory benchmark. Its test images differ from the original 366-image partition, so the change from 98.91% to 98.31% accuracy is not a controlled estimate of the effect of deduplication.
+
+The full dataset had already informed earlier experiments. Patient identities remain unavailable, similarity grouping is approximate, and no external validation has been performed. I also have not retrained the other architectures on this corrected split, so I cannot use their historical metrics to claim that B0 is the best model under the new protocol.
+
+My next thesis-writing step is to present the original experiments as exploratory, explain the integrity finding and correction, and use this new experiment for the corrected binary results section.
 
 ## Checkpoint numbering rule
 

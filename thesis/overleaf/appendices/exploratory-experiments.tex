@@ -1,0 +1,25 @@
+\chapter{Supplementary Exploratory Experiments}
+\label{app:exploratory}
+
+\section{Historical Binary Model Comparison}
+\label{sec:appendix-binary-comparison}
+\writingnote{Summarize custom CNN and transfer-learning experiments on the
+original partitions. Identify the original 366-image test split, the detected
+image overlap, and repeated test consultation during exploration. These scores
+are exploratory and do not establish a ranking under the final protocol.}
+
+\tableplaceholder{Historical binary results on the original partitions.}{tab:historical-binary}{%
+Populate from saved historical artifacts, not from memory. Include model,
+preprocessing, training budget, metrics, and an explicit original-split label.
+Do not add the final B0 score to this table as a directly comparable competitor.}
+
+\section{Exploratory Five-Class Grading}
+\label{sec:appendix-multiclass}
+\writingnote{Summarize original grades 0--4, class imbalance, preprocessing,
+class weighting, weighted sampling, and focal-loss experiments. Identify which
+results exist; do not report merely proposed experiments as completed. State
+the original-split limitations and why multiclass is not the primary endpoint.}
+
+\tableplaceholder{Historical multiclass experiments and their settings.}{tab:historical-multiclass}{%
+Columns: configuration; preprocessing; loss; class weights; sampler;
+macro-F1; weighted-F1; QWK. Keep metric definitions and split provenance explicit.}
